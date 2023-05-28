@@ -22,6 +22,8 @@ describe('TicketService', () => {
       
       expect(() => ticketService.purchaseTickets(accountId, new TicketTypeRequest('ADULT', 10))).not.toThrowError('');
 
+      expect(() => ticketService.purchaseTickets(0, new TicketTypeRequest('ADULT', 10))).toThrowError("Invalid ticket purchase request. Account Id should be a number greater than zero.");
+      expect(() => ticketService.purchaseTickets("INVALID-ID", new TicketTypeRequest('ADULT', 10))).toThrowError("Invalid ticket purchase request. Account Id should be a number greater than zero.");
       expect(() => ticketService.purchaseTickets(accountId, new TicketTypeRequest('XYZ-invalid', 10))).toThrowError("type must be ADULT, CHILD, or INFANT");
       expect(() => ticketService.purchaseTickets(accountId, new TicketTypeRequest('ADULT', '2289-invalid'))).toThrowError("noOfTickets must be an integer");
       

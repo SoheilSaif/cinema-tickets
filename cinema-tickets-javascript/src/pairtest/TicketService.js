@@ -20,6 +20,11 @@ export default class TicketService {
  }
 
 
+  // Validate account Id 
+  #isAccountIdValid(accountId) {
+    return typeof accountId === 'number' && accountId > 0;
+  }
+
   constructor(paymentService, seatReservationService){
     this.paymentService = paymentService;
     this.seatReservationService = seatReservationService;    
@@ -33,6 +38,9 @@ export default class TicketService {
   purchaseTickets(accountId, ...ticketTypeRequests) {
     // throws InvalidPurchaseException
 
+    if (!this.#isAccountIdValid(accountId)){
+      throw new InvalidPurchaseException("Invalid ticket purchase request. Account Id should be a number greater than zero.");
+    }
 
      // Check if ticket purchase request items count is in the valid range
      let totalTickets = ticketTypeRequests.reduce((sum, request)=> sum + request.getNoOfTickets(), 0);  
