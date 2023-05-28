@@ -54,7 +54,7 @@ describe('TicketService', () => {
  ]; 
  describe('purchaseTickets: should calculate the correct amount, make payment and reserve seats', () => {
   test.each(successPurchaseCases)("Case %p",(caseName, request, totalAmount, totalTicketCount) => {
-    const accountId = accountId;
+    
     paymentServiceMock.makePayment.mockReturnValueOnce();
     seatReservationServiceMock.reserveSeats.mockReturnValueOnce();
 

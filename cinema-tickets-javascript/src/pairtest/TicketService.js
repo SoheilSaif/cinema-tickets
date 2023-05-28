@@ -49,7 +49,7 @@ export default class TicketService {
      }
     
      
-    // Check if at least one Adult ticket request should be present.
+    // Check if at least one Adult ticket request exists
     const existsAdultTicketRequest = ticketTypeRequests.some((request)=> request.getTicketType() === 'ADULT');
     if(!existsAdultTicketRequest){
       throw new InvalidPurchaseException( `Invalid ticket purchase request. At least one Adult ticket request should be present.`);
@@ -64,13 +64,15 @@ export default class TicketService {
       var item = this.#getTicketsPriceList().find(item=>item.ticketType === request.getTicketType());
       totalOrderAmount +=  item.price * request.getNoOfTickets();
 
-      // Do not include infants in seat reservation
+      // Do not include Infants in seat reservation
       if (request.getTicketType() !== 'INFANT') {
         totalSeats += request.getNoOfTickets();      
       }
     });
 
+    // Reserve seats
     this.seatReservationService.reserveSeats(accountId, totalSeats); 
+    // Make payment
     this.paymentService.makePayment(accountId, totalOrderAmount);
   }
 }
