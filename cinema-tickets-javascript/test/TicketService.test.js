@@ -27,19 +27,23 @@ describe('TicketService', () => {
       expect(() => ticketService.purchaseTickets(accountId, new TicketTypeRequest('XYZ-invalid', 10))).toThrowError("type must be ADULT, CHILD, or INFANT");
       expect(() => ticketService.purchaseTickets(accountId, new TicketTypeRequest('ADULT', '2289-invalid'))).toThrowError("noOfTickets must be an integer");
       
-      expect(() => ticketService.purchaseTickets(accountId)).toThrowError('Invalid ticket purchase request. Please ensure that you are purchasing between 1 and 20 tickets.');
-      expect(() => ticketService.purchaseTickets(accountId, new TicketTypeRequest('ADULT', 0))).toThrowError('Invalid ticket purchase request. Please ensure that you are purchasing between 1 and 20 tickets.');
-      expect(() => ticketService.purchaseTickets(accountId, new TicketTypeRequest('ADULT', 10), new TicketTypeRequest('ADULT', 11))).toThrowError('Invalid ticket purchase request. Please ensure that you are purchasing between 1 and 20 tickets.');
+      const invalidRangeMsg = 'Invalid ticket purchase request. Please ensure that you are purchasing between 1 and 20 tickets.';
+      expect(() => ticketService.purchaseTickets(accountId)).toThrowError(invalidRangeMsg);
+      expect(() => ticketService.purchaseTickets(accountId, new TicketTypeRequest('ADULT', 0))).toThrowError(invalidRangeMsg);
+      expect(() => ticketService.purchaseTickets(accountId, new TicketTypeRequest('ADULT', 10), new TicketTypeRequest('ADULT', 11))).toThrowError(invalidRangeMsg);
     });
 
     test('should throw an error if Adult ticket is not included when purchasing Child or Infant tickets', () => {
-      expect(() => ticketService.purchaseTickets(accountId, new TicketTypeRequest('INFANT', 1))).toThrowError('Invalid ticket purchase request. At least one Adult ticket request should be present.');
-      expect(() => ticketService.purchaseTickets(accountId, new TicketTypeRequest('INFANT', 1), new TicketTypeRequest('INFANT', 1))).toThrowError('Invalid ticket purchase request. At least one Adult ticket request should be present.');
-      
-      expect(() => ticketService.purchaseTickets(accountId, new TicketTypeRequest('CHILD', 1))).toThrowError('Invalid ticket purchase request. At least one Adult ticket request should be present.');
-      expect(() => ticketService.purchaseTickets(accountId, new TicketTypeRequest('CHILD', 1), new TicketTypeRequest('CHILD', 1))).toThrowError('Invalid ticket purchase request. At least one Adult ticket request should be present.');
 
-      expect(() => ticketService.purchaseTickets(accountId, new TicketTypeRequest('INFANT', 1), new TicketTypeRequest('CHILD', 1))).toThrowError('Invalid ticket purchase request. At least one Adult ticket request should be present.');
+      const invalidAdultTicketMsg = 'Invalid ticket purchase request. At least one Adult ticket request should be present.';
+
+      expect(() => ticketService.purchaseTickets(accountId, new TicketTypeRequest('INFANT', 1))).toThrowError(invalidAdultTicketMsg);
+      expect(() => ticketService.purchaseTickets(accountId, new TicketTypeRequest('INFANT', 1), new TicketTypeRequest('INFANT', 1))).toThrowError(invalidAdultTicketMsg);
+      
+      expect(() => ticketService.purchaseTickets(accountId, new TicketTypeRequest('CHILD', 1))).toThrowError(invalidAdultTicketMsg);
+      expect(() => ticketService.purchaseTickets(accountId, new TicketTypeRequest('CHILD', 1), new TicketTypeRequest('CHILD', 1))).toThrowError(invalidAdultTicketMsg);
+
+      expect(() => ticketService.purchaseTickets(accountId, new TicketTypeRequest('INFANT', 1), new TicketTypeRequest('CHILD', 1))).toThrowError(invalidAdultTicketMsg);
     });  
 
   });
